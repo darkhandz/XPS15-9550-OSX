@@ -553,6 +553,8 @@ Clover Configurator打开config.plist左侧选择`Kernel and Kexts patch`,在右
 
 Name填`AppleGraphicsDevicePolicy`
 
+下面的数值只适用于Mac-B809C3757DA9BB8D这个ID。
+
 Find填
 
 	3e4d61632d423830394333373537444139424238443c2f6b65793e0a090909093c737472696e673e436f6e666967323c2f737472696e673e0a09 
