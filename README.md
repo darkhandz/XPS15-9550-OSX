@@ -185,7 +185,7 @@
 
 1. 在桌面找到你前面复制出来的东西，其中一个叫CCV.zip，解压。打开Clover Configurator.app，Mount EFI partition，右下角Mount EFI partition（挂载EFI分区），然后Open Partition，弹出了EFI文件夹。
 
-找到EFI\Clover\ACPI\origin，整个文件夹复制到桌面（记得是桌面，这和后面的命令有关的），目前origin里面的文件是DSDT和SSDT未反编译的文件，从现在开始，我说的origin都是指桌面的那个。
+	找到EFI\Clover\ACPI\origin，整个文件夹复制到桌面（记得是桌面，这和后面的命令有关的），目前origin里面的文件是DSDT和SSDT未反编译的文件，从现在开始，我说的origin都是指桌面的那个。
 
 2. 把RehabMan-MaciASL-2016-0423.zip解压，得到MaciASL，双击运行，屏幕左上角`MaciASL - Preferences`，Sources，点击+号，左边随便填，右边URL填：`http://raw.github.com/RehabMan/Laptop-DSDT-Patch/master` 注意大小写，然后关闭，退出MaciASL。
 
