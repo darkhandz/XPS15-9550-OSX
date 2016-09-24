@@ -17,7 +17,7 @@
 - 声卡外放完美，耳机低频丢失，稍微调整一下左右声道可以暂缓
 - 亮度调节正常，但最低三档有闪屏现象，音量调节正常
 - 无线正常，USB全部正常，摄像头、麦克风正常
-- ThunderBolt似乎无解
+- ThunderBolt似乎无解，AirDrop正常，蓝牙正常
 - 盒盖睡眠，翻盖唤醒，手动睡眠 全部正常
 - 电量正常
 - 偶尔开机时会卡在进度条画面（十多次发现一次）
@@ -501,21 +501,34 @@ Skylake的CPU默认不会加载AppleLPC.kext，需要打补丁。给DSDT打补�
 给DSDT打上 `[sys] OS Check Fix (Windows 8)` 补丁。
 
 ### J. 假以太网卡内建
-为了配合后面安装的NullEthernet.kext(在SLE里), 还需要打个补丁, 把下面的内容粘贴到Patch窗口的右上方, 按Apply, Close, Compile没有Errors，保存，关闭MaciASL.
+为了配合后面安装的NullEthernet.kext(在SLE里), 还需要打个补丁, 把下面的内容粘贴到Patch窗口的右上方, 按Apply, Close, Compile没有Errors，保存，关闭MaciASL.(感谢坛友龙猫喵的提醒，下面修正了代码)
+想研究的同学去[Rehabman大神的github](https://github.com/RehabMan/OS-X-Null-Ethernet)看看。
 
 ```
-into method label _DSM parent_label NIC parent_label RP06 remove_entry;
-into device label NIC parent_label RP06 insert
+# DSDT patch to enable NullEthernet.kext
+
+into device label RMNE remove_entry;
+into definitionblock code_regex . insert
 begin
-Method (_DSM, 4, NotSerialized)\n
+Device (RMNE)\n
 {\n
-    If (LEqual (Arg2, Zero)) { Return (Buffer() { 0x03 } ) }\n
-    Return (Package()\n
+    Name (_ADR, Zero)\n
+    // The NullEthernet kext matches on this HID\n
+    Name (_HID, "NULE0000")\n
+    // This is the MAC address returned by the kext. Modify if necessary.\n
+    Name (MAC, Buffer() { 0x11, 0x22, 0x33, 0x44, 0x55, 0x66 })\n
+    Method (_DSM, 4, NotSerialized)\n
     {\n
-        "RM,MAC-address", Buffer() { 0x11, 0x22, 0x33, 0x66, 0x55, 0x44 },\n
-        "built-in", Buffer() { 0x00 },\n
-        "device_type", Buffer() { "ethernet" },\n
-    })\n
+        If (LEqual (Arg2, Zero)) { Return (Buffer() { 0x03 } ) }\n
+        Return (Package()\n
+        {\n
+            "built-in", Buffer() { 0x00 },\n
+            "IOName", "ethernet",\n
+            "name", Buffer() { "ethernet" },\n
+            "model", Buffer() { "RM-NullEthernet-1001" },\n
+            "device_type", Buffer() { "ethernet" },\n
+        })\n
+    }\n
 }\n
 end;
 ```
