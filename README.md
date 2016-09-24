@@ -1,24 +1,41 @@
 # XPS15-9550-OSX
 
-> 这里是纯文字版本, 需要图文的话, 看doc
+> doc文档不更新了，直接看本文吧
 
-之前弄过Acer 4743G的黑苹果，除了睡眠，其他都正常，日常用起来感觉也没什么问题，所以对XPS也是信心满满的，当然也是因为在PCBeta看了不少成功案例，还有国外一位牛人把驱动，DSDT，Clover配置全部分享在github，所以就打算买一台XPS 15 9550来做主力机型，用于开发。
+&ensp;&ensp;之前弄过Acer 4743G的黑苹果，除了睡眠，其他都正常，日常用起来感觉也没什么问题，所以对XPS也是信心满满的，当然也是因为在PCBeta看了不少成功案例，还有国外一位牛人把驱动，DSDT，Clover配置全部分享在github，所以就打算买一台XPS 15 9550来做主力机型，用于开发。
 
-从JS处三言两语就定下了官翻，现货，当晚付款发货，翌日中午收到，打开一看，还是很满意的，除了没有硬盘指示灯，开盖比较困难，没有送国标电源线，屏幕下方有一处漏光（日常使用倒是不觉），还是挺满意的。
+&ensp;&ensp;从JS处三言两语就定下了官翻，现货，当晚付款发货，翌日中午收到，打开一看，还是很满意的，除了没有硬盘指示灯，开盖比较困难，没有送国标电源线，屏幕下方有一处漏光（日常使用倒是不觉），还是挺满意的。
 
-然后我边安装边写教程，过程中也遇到过不少问题，强制关机什么的都是家常便饭了，写完教程修修补补之后，我又重新格盘，自己对着教程，安装了几次，测试没有明显问题之后，才发的本文。
+&ensp;&ensp;然后我边安装边写教程，过程中也遇到过不少问题，强制关机什么的都是家常便饭了，写完教程修修补补之后，我又重新格盘，自己对着教程，安装了几次，测试没有明显问题之后，才发的本文。
 等我把弯路都走过，大家就不用再走了，争取对着本文一步步操作，一次成功！还有些潜在的BUG我发现不了，希望大家一起完善。
 
-配置大家上网一查就知道了：``XPS 15 9550  i7-6700HQ  8G  256G(NVME 东芝) 1080P ``
+配置大家上网一查就知道了：``XPS 15 9550  i7-6700HQ  8G  256G(NVME 东芝) 1080P ``  
+
+完成后的状态： 
+>
+- 显卡正常
+- 声卡外放完美，耳机低频丢失，稍微调整一下左右声道可以暂缓
+- 亮度调节正常，但最低三档有闪屏现象，音量调节正常
+- 无线正常，USB全部正常，摄像头、麦克风正常
+- ThunderBolt似乎无解
+- 盒盖睡眠，翻盖唤醒，手动睡眠 全部正常
+- 电量正常
+- 偶尔开机时会卡在进度条画面（十多次发现一次）
+- HDMI输出未测试
+- 直接升级系统未测试
 
 ## 一、硬件准备
 
 1. 更新你的BIOS到01.02.10（虽然9月6日有更新的BIOS，但我还是用这个7月5日的版本）。
-	更新包下载页面：``http://www.dell.com/support/home/cn/zh/cndhs1/Drivers/DriversDetails?driverId=96T2K``
+	更新包下载页面：[Dell官方下载](http://www.dell.com/support/home/cn/zh/cndhs1/Drivers/DriversDetails?driverId=96T2K)
 	
 	下载完成后是``XPS_9550_1.2.10.exe``，直接在XPS15上双击运行，确保你的电量在50%以上或接上了电源，两次点击确定，系统就自动重启并进入BIOS升级界面了。	 
 	
+	![](http://odzz92j0w.bkt.clouddn.com/image/xps9550-osx/update_bios.png)
+	
 	进入了升级界面之后别手贱了，耐心等完成，完成的时候有一行绿字，然后自动重启。 
+	
+	![](http://odzz92j0w.bkt.clouddn.com/image/xps9550-osx/IMG_6946.JPG)
 	
 	重启完成进入Windows后你再重启一次，重启看见DELL的时候按一下F2，进入BIOS设置画面，在就会显示`General-System Information`里会显示BIOS版本为`01.02.10`，后面我们会再来改变一些设置。
 
@@ -26,10 +43,13 @@
 
 ## 二、软件准备
 
-1. 下载OSX 10.11.6系统DMG镜像，带Clover引导的那种，省事（只用一个U盘就可以引导+安装） `http://pan.baidu.com/s/1c18RYEG`
-2. 下载我提供的软件：`https://pan.baidu.com/s/1i5sJdmH` 密码: tutp
+1. 下载OSX 10.11.6系统DMG镜像，带Clover引导的那种，省事（只用一个U盘就可以引导+安装） [百度云下载](http://pan.baidu.com/s/1c18RYEG)
+2. 下载我提供的软件：[百度云下载](https://pan.baidu.com/s/1i5sJdmH) 密码: `tutp`, 有时可能更新得不及时，最新的直接在本文头顶找吧。
 
 	安装TransMac（在官网或上面的共享下载就行了，试用期15天，还要什么破解版，用那么3、5次就不用了），安装到XPS的出厂自带Windows系统，然后把上面的DMG镜像写入U盘，右击TransMac，以管理员身份运行，然后看图操作，出现Restore Complete即为写入完成。
+	
+	![](http://odzz92j0w.bkt.clouddn.com/image/xps9550-osx/write_dmg.png)
+	
 
 3. 打开文件浏览器，发现只有一个名字为EFI的分区（俗称盘），这个分区其实就是TransMac写入你U盘的那个镜像文件创建的，里面有EFI文件夹，有boot文件。
 
@@ -91,24 +111,45 @@
 	- Secure Boot - Secure Boot Enable里改成Disabled
 	- General - Advanced Boot Options里，Enable Legacy Option ROMs勾上
 	- System Configuration - SATA Operation 改成 AHCI
-	- Boot Sequence - Boot List Option确保是UEFI，然后右边点击Add Boot Option，出现一个对话框。
+	- Boot Sequence - Boot List Option确保是UEFI，然后右边点击Add Boot Option.
 
+	出现一个对话框:
+	
+	![](http://odzz92j0w.bkt.clouddn.com/image/xps9550-osx/IMG_6950.JPG)
  
-	第一个框`Boot Option Name`随便填，这里我写`Clover`，最后一个框`File Name`点击右边的按钮，出现另外一个对话框。	   
+	第一个框`Boot Option Name`随便填，这里我写`Clover`，最后一个框`File Name`点击右边的按钮，出现另外一个对话框。	  
+	
+	选择EFI文件夹
+	
+	![](http://odzz92j0w.bkt.clouddn.com/image/xps9550-osx/IMG_6951.JPG)
+	
+	选择Clover（如果没看见Clover，点击上面的`File System`旁边的下拉列表，换一个FS1或FS2或FS0，总之要找到EFI里有Clover的）
+
+	![](http://odzz92j0w.bkt.clouddn.com/image/xps9550-osx/IMG_6952.JPG)
+
+	右边出现`CLOVERX64.EFI`，点击它，点击OK，再点击OK。 
+	
+	![](http://odzz92j0w.bkt.clouddn.com/image/xps9550-osx/IMG_6954.JPG)
 	 
-	选择EFI文件夹，选择Clover（如果没看见Clover，点击上面的`File System`旁边的下拉列表，换一个FS1或FS2或FS0，总之要找到EFI里有Clover的），右边出现`CLOVERX64.EFI`，点击它，点击OK，再点击OK。
-	  
-	现在发现右上角的列表多了一个Clover，把它调到最顶（顺序可以用右边的按钮调节）。   
+	现在发现右上角的列表多了一个Clover，把它调到最顶（顺序可以用右边的按钮调节）。  
+	
+	![](http://odzz92j0w.bkt.clouddn.com/image/xps9550-osx/IMG_6955.JPG)
+	 
 	改完后Apply-Save，OK, Exit，电脑自动重启  
 
 6. 出现横排一行图标的画面，就是Clover引导的画面了
  
-	按方向键右找找有没有Boot OS X Install from Install OS X EI Caption的（真TM长），对准它按空格键，选择Boot Mac OS X in verbose mode再按空格。
-	
-	这时候会进入黑底白字很多英文，过了2分钟，就进入了白色苹果界面，下面一个进度条。  
-	这个画面可能进度条不走，别紧张，耐心等2分钟就好了。
-	 
-	如果你卡在很多英文的那个界面（俗称V图）5分钟不动，那可能是Clover配置或驱动（Kexts\Other）有问题了，你得仔细检查，检查不出的话，看看V图最后提示什么英文，上论坛搜索一下。
+![](http://odzz92j0w.bkt.clouddn.com/image/xps9550-osx/IMG_6956.JPG)
+ 
+按方向键右找找有没有Boot OS X Install from Install OS X EI Caption的（真TM长），对准它按空格键，选择Boot Mac OS X in verbose mode再按空格。
+
+这时候会进入黑底白字很多英文.
+
+![](http://odzz92j0w.bkt.clouddn.com/image/xps9550-osx/IMG_6957.JPG)
+
+过了2分钟，就进入了白色苹果界面，下面一个进度条。这个白色苹果画面可能进度条不走，别紧张，耐心等2分钟就好了。
+ 
+如果你卡在很多英文的那个界面（俗称V图）5分钟不动，那可能是Clover配置或驱动（Kexts\Other）有问题了，你得仔细检查，检查不出的话，看看V图最后提示什么英文，上论坛搜索一下。
 
 
 ## 三、安装过程
@@ -119,20 +160,33 @@
 
 1. 选择语言为简体中文，然后点击磁盘工具，出现如下图，如果你加载了NVME驱动（上面Other文件夹里的）。
 我这里选择TOSHIBA的盘，因为这是我的NVME主硬盘（感谢JS发的官翻XPS不是用PM951），抹掉，名字随便改，抹掉。
+	
+	![](http://odzz92j0w.bkt.clouddn.com/image/xps9550-osx/IMG_6958.JPG)
+	
+	![](http://odzz92j0w.bkt.clouddn.com/image/xps9550-osx/IMG_6959.JPG)
+
    
 	然后点击分区，按你自己的需要，不需要Win系统的话跳过此步。我这里把OSX分区分170G（主力系统，搞开发），剩下的85G留给Win10，点击应用就可以了。
+	
+	![](http://odzz92j0w.bkt.clouddn.com/image/xps9550-osx/IMG_6960.JPG)
  
 	然后关闭磁盘工具，选择安装OS X，点击继续，同意，同意，卖身成功。
-
-2. 这时候会让你选择安装到哪个分区，选择刚才我们分出来的OSX分区，点击安装，这时候要界面提示等8分钟，其实“剩余大约1秒钟”这个提示持续了16分钟，要不是看到U盘狂闪，我还真以为它卡死了。
- 
-3. 等到安装完成，自动重启了，这时候会再次进入到Clover的引导画面。
-
-	如果没有出现Boot Mac OS X from OSX图标，就再次选择Boot OS X Install from Install OS X EI Caption直接回车，不用进verbose模式了，会再进入安装界面，这回是英文界面，自动继续安装，大概也要等20分钟。
 	
-	如果出现Boot Mac OS X from OSX图标，直接选择它，回车，跳到下面第5步。
+	![](http://odzz92j0w.bkt.clouddn.com/image/xps9550-osx/IMG_6962.JPG)
 
-4. 等再次安装完成，自动重启，这时候Clover的引导画面已经多了一个选项：Boot Mac OS X from OSX，选择这个按空格，再选verbose mode，继续大段英文，就进入OSX系统设置阶段。
+2. 这时候会让你选择安装到哪个分区，选择刚才我们分出来的OSX分区，点击安。
+
+	这时候要界面提示等8分钟，其实“剩余大约1秒钟”这个提示持续了16分钟，要不是看到U盘狂闪，我还真以为它卡死了。
+ 
+3. 等到安装完成，自动重启了，这时候会再次进入到Clover的引导画面，现在有如下两种情况。
+
+	- 如果没有出现`Boot Mac OS X from OSX`图标，就再次选择`Boot OS X Install from Install OS X EI Caption`直接回车，会再进入安装界面，这回是英文界面，自动继续安装，大概也要等20分钟，然后会自动重启。
+	
+	- 如果出现Boot Mac OS X from OSX图标，直接选择它，回车，跳到下面第5步。
+
+4. 这时候Clover的引导画面已经多了一个选项：`Boot Mac OS X from OSX`，选择这个按空格，再选verbose mode，继续大段英文，就进入OSX系统设置阶段。
+
+	![](http://odzz92j0w.bkt.clouddn.com/image/xps9550-osx/IMG_6966.JPG)
 
 5. 这时候可以按照实际情况设置时区、语言、无线连接、用户登陆什么的，然后就进入系统了。
 
@@ -142,6 +196,8 @@
 	出现登陆Apple ID画面，登你手机那个也可以，新注册一个也可以，不登陆就选Don’t sign in，Continue。  
 	出现卖身条约，Agree吧，出现系统用户设置画面，起个名字，设个密码，Continue。  
 	出现诊断/使用 报告，不勾，Continue，进入桌面。
+	
+	![](http://odzz92j0w.bkt.clouddn.com/image/xps9550-osx/IMG_6967.JPG)
 
 
 ## 四、硬盘引导
@@ -155,6 +211,7 @@
 	
 	- 再输入`diskutil list` 回车，出现：
 	 
+		![](http://odzz92j0w.bkt.clouddn.com/image/xps9550-osx/IMG_6969.JPG)
 	
 	- 找到`Install OS X El Caption` 这行对上的那行是EFI，看看这行最左边对应的数字是1，顺着往上看看#号顶上是什么，我这里是`/dev/disk2`，那么接下来的命令就是：
 	`sudo mount -t msdos /dev/disk2s1 /Volumes/myefi` 回车，提示输入密码，输入你上面第5小步的时候设置的系统用户密码，什么也不提示表示成功执行。
@@ -168,7 +225,7 @@
 	然后点击Install（安装），提示输入用户密码，安装完成，点击Close。  
 
 4. 这时候Finder左边有两个EFI分区了，注意区分一下哪个是你U盘的（右边有特殊符号的那个）。
-	先把系统的EFI分区里面的Clover\kexts文件夹删除，然后把你U盘的EFI分区Clover\kexts文件夹整个复制到系统的EFI分区那里。
+	先把系统的EFI分区里面的Clover\kexts文件夹删除，然后把你U盘的EFI分区Clover\kexts文件夹整个复制到系统的EFI分区那里。  
 	然后把你U盘里的`Clover\Drivers64UEFI\HFSPlus.efi`复制到系统的Clover\Drivers64UEFI里。
 
 5. 现在修改一下系统语言，点击屏幕左上角的苹果Logo，第二项，第一行第五个，左下角有个+号，选择简体中文，然后选择PinYin输入法，确定，提示要Restart，点击Restart Now，就重启了，电脑黑屏准备重启的时候把引导U盘拔掉，让系统硬盘的Clover引导。
@@ -181,7 +238,7 @@
 
 ## 五、DSDT
 
-0. 重启电脑，在Clover画面选择系统的时候，按Fn+F4提取DSDT/SSDT，别怀疑，按了之后确实是没有任何反应的，然后进入OSX系统吧。在下一步之前，你可以先粗略看看 http://bbs.pcbeta.com/viewthread-1692831-1-1.html 里面的“关于修改DSDT的一些常识”这小节（不用对着做），然后再回来我这里往下看。
+0. 重启电脑，在Clover画面选择系统的时候，按Fn+F4提取DSDT/SSDT，别怀疑，按了之后确实是没有任何反应的，然后进入OSX系统吧。在下一步之前，你可以先粗略看看[这个帖子里面](http://bbs.pcbeta.com/viewthread-1692831-1-1.html)的“关于修改DSDT的一些常识”这小节（不用对着做），然后再回来我这里往下看。
 
 1. 在桌面找到你前面复制出来的东西，其中一个叫CCV.zip，解压。打开Clover Configurator.app，Mount EFI partition，右下角Mount EFI partition（挂载EFI分区），然后Open Partition，弹出了EFI文件夹。
 
@@ -189,17 +246,18 @@
 
 2. 把RehabMan-MaciASL-2016-0423.zip解压，得到MaciASL，双击运行，屏幕左上角`MaciASL - Preferences`，Sources，点击+号，左边随便填，右边URL填：`http://raw.github.com/RehabMan/Laptop-DSDT-Patch/master` 注意大小写，然后关闭，退出MaciASL。
 
-3. 我提供的文件里，含有一个refs.txt，把它放到origin里。
+3. 我提供的文件里，含有一个refs.txt，把它放到origin里。  
 	还有一个iasl.zip，解压得到iasl，也放到origin里。  
 	除了下面列出的文件：其他所有多余的文件都从origin里删除掉。  
 	``Iasl、refs.txt、DSDT.aml
 	SSDT-0、SSDT-1、SSDT-2、SSDT-4、SSDT-5、SSDT-6、SSDT-7、SSDT-8、SSDT-16、SSDT-17、SSDT-18 ``
 
 4. 打开终端，`cd ~`（波浪号）回车，`cd Desktop/origin` 回车，注意空格和大小写，然后输入下面的命令：
-`./iasl -da -dl -fe refs.txt *.aml` 回车，发现origin文件夹多了很多同名的dsl文件，就成功反编译了。
-	在origin里新建一个文件夹Old，把所有aml文件拖进去（按住Alt可以点选多个），这些是原始DSDT/SSDT文件，暂时用不到，
-	我们的目标是dsl文件，把所有dsl文件复制一份，新建一个文件夹叫原版，粘贴。
-	这是个好习惯，每改一个版本我们就复制一份出来，万一改出问题了，我们用前一个版本来覆盖，再改。
+`./iasl -da -dl -fe refs.txt *.aml` 回车，发现origin文件夹多了很多同名的dsl文件，就成功反编译了。  
+
+	在origin里新建一个文件夹Old，把所有aml文件拖进去（按住Alt可以点选多个），这些是原始DSDT/SSDT文件，暂时用不到，  
+	我们的目标是dsl文件，把所有dsl文件复制一份，新建一个文件夹叫原版，粘贴。  
+	这是个好习惯，每改一个版本我们就复制一份出来，万一改出问题了，我们用前一个版本来覆盖，再改。  
 
 5. 开始修改DSDT/SSDT
 	现在origin里所有dsl文件双击都可以自动用MaciASL打开的。  
@@ -210,7 +268,9 @@
 	
 	别看下面代码好多的样子，其实超简单，就搜索，粘贴或替换，没技术含量的，想起我的Acer 4743G修复电量显示的时候才是痛苦。
 	
-	每做完一个小步骤，你都应该点击一下MaciASL上面的Compile按钮，确定下方提示是0 Errors，至于warnings就不用管。如果有Error，你应该检查你这一小步是否做错了。
+	每做完一个小步骤，你都应该点击一下MaciASL上面的Compile按钮，确定窗口下方提示是0 Errors，至于warnings就不用管。如果有Error，你应该检查你这一小步是否做错了。
+	
+	![](http://odzz92j0w.bkt.clouddn.com/image/xps9550-osx/IMG_6970.JPG)
  
 
 ### A. 系统模拟
@@ -467,17 +527,17 @@ end;
 
 然后我们打开DSDT.dsl，点击屏幕左上角的File - Save as...，在弹出的对话框中，File Format选择`ACPI Machine Language Binary`，在文件名后面加上.aml，点击Save保存。  
 
+![](http://odzz92j0w.bkt.clouddn.com/image/xps9550-osx/IMG_6972.JPG)
+
 对origin里其他.dsl文件进行上述的保存操作，生成所有.aml文件。  
 
 然后把这些aml文件全部复制到系统EFI分区的`Clover\ACPI\patched`里面（还记得怎样挂载EFI分区吗？用Clover Configurator.app，看看本节的第1小点）
 
 7.让DSDT/SSDT生效
+
 打开`Clover\config.plist`，现在系统应该默认是用Clover Configurator.app打开它的。  
-
-点击左边Acpi项，右下边找到SSDT的框里面的Drop OEM勾上。 
-
-点击左边Devices项，把IntelGFX框的内容0x12345678清空。  
-
+点击左边Acpi项，右下边找到SSDT的框里面的Drop OEM勾上。  
+点击左边Devices项，把IntelGFX框的内容0x12345678清空。 
 然后点击屏幕左上角的File，Save，关闭Clover Configurator.app，如果还有提示框出现，点击OK。
 
 
@@ -493,7 +553,7 @@ end;
 
 4. 删除网络配置(为了配合NullEthernet.kext)
 
-	系统偏好设置 – 网络, 把左边所有的有线无线网络接口都删除(点下面的减号), 然后去删除/Library/Preferences/SystemConfiguration/NetworkInterfaces.plist, 如何打开呢? 在终端输入open /Library/Preferences/SystemConfiguration, 就出现了, 然后找到NetworkInterfaces.plist 删除掉.
+	系统偏好设置 – 网络, 把左边所有的有线无线网络接口都删除(点下面的减号), 然后去删除/Library/Preferences/SystemConfiguration/NetworkInterfaces.plist, 如何打开呢? 在终端输入`open /Library/Preferences/SystemConfiguration`, 就出现了, 然后找到`NetworkInterfaces.plist` 删除掉.
 
 	重启后发现声音有了，电量显示了，显卡驱动起来了，如果触摸板不正常，再重启多两次就正常了。
 
@@ -507,63 +567,58 @@ end;
 
 ## 七. 附加补丁
 
-Corenel的github上提供了他自己的配置，其中有个`ssdt-uiac.aml`，这个和USBInjectAll.kext （在我的MoreKexts里）配合使用的，用来修复USB3的一些问题，你放ACPI\patched里面好了。想研究的也可以看看：
-https://github.com/RehabMan/OS-X-USB-Inject-All 
+Corenel的github上提供了他自己的配置，其中有个`ssdt-uiac.aml`，这个和`USBInjectAll.kext` （在我的MoreKexts里）配合使用的，用来修复USB3的一些问题，你放ACPI\patched里面好了。  
+想研究的也可以看看：https://github.com/RehabMan/OS-X-USB-Inject-All 
 
-还有个`SSDT-ALC298.aml`，配合CodecCommander.kext使用的，修复睡眠/唤醒后，声音的状态，也是放patched里面，但`在我这里两者都不用也可以唤醒有声，所以推荐你有需要才用`。
-想要自己编译的话，下载地址：https://github.com/RehabMan/EAPD-Codec-Commander 这里的是dsl，自己编译成aml。
+还有个`SSDT-ALC298.aml`，配合`CodecCommander.kext`使用的，修复睡眠/唤醒后，声音的状态，也是放patched里面，但**在我这里两者都不用也可以唤醒有声，所以推荐你真正发现唤醒无声才用**。  
+想研究的也可以看看：https://github.com/RehabMan/EAPD-Codec-Commander 这里的是dsl，自己编译成aml使用。
 
 ## 八. CPU变频
 
 终端执行：`curl -o ~/ssdtPRGen.sh https://raw.githubusercontent.com/Piker-Alpha/ssdtPRGen.sh/Beta/ssdtPRGen.sh`
 
-然后：`chmod +x ~/ssdtPRGen.sh`
-最后：`./ssdtPRGen.sh`
-如果提示：`Compilation complete. 0 Errors, 0 Warnings, 0 Remarks, 0 Optimizations`
-
+然后：`chmod +x ~/ssdtPRGen.sh`  
+最后：`./ssdtPRGen.sh`  
+如果提示：`Compilation complete. 0 Errors, 0 Warnings, 0 Remarks, 0 Optimizations`  
 就是生成变频SSDT成功。
 
 接下来还有提示：
+`Do you want to copy /Users/XXX/Library/ssdtPRGen/ssdt.aml to /Extra/ssdt.aml? (y/n)?  输入n回车`
+`Do you want to open ssdt.dsl (y/n)?  输入n回车`
 
-`Do you want to copy /Users/XXX/Library/ssdtPRGen/ssdt.aml to /Extra/ssdt.aml? (y/n)?  我输入n回车`
+然后输入：`open ~/Library/ssdtPRGen/` ，弹出窗口，找到ssdt.aml 和 ssdt.dsl，复制到origin，把ssdt.aml复制到EFI分区的patched里面，重启。
 
-`Do you want to open ssdt.dsl (y/n)?  我输入n回车`
+再次强调，因为**我上面采用的config.plist已经在SSDT-OEM列表包含了ssdt.aml**，所以这里只需要复制过去patched就好，没有额外工作。
 
-然后输入：open ~/Library/ssdtPRGen/ ，弹出窗口，找到ssdt.aml 和 ssdt.dsl，复制到origin，把ssdt.aml复制到EFI分区的patched里面，重启。
-
-再次强调，因为我上面采用的config.plist已经在SSDT-OEM列表包含了ssdt.aml，所以这里只需要复制过去patched就好，没有额外工作。
-
-重启发现，系统启动速度更快了！
+重启发现，系统启动速度更快了！节能器出现了Power Nap的勾选项.
 
 ## 九、外置输出
 
 根据Corenel的github上面说的，你用了iMac7,1这个SMBIOS的话（上面我的config.plist就是），你要这样操作：
 
-1.打开你的config.plist找到SMBIOS里面的Board-ID,我这里是Mac-B809C3757DA9BB8D.
+1. 打开你的config.plist找到SMBIOS里面的`Board-ID`,我这里是`Mac-B809C3757DA9BB8D`.
 
-2.用文本编辑打开/System/Library/Extensions/AppleGraphicsControl.kext/Contents/PlugIns/AppleGraphicsDevicePolicy.kext/Contents/Info.plist
+2. 用文本编辑打开/System/Library/Extensions/AppleGraphicsControl.kext/Contents/PlugIns/AppleGraphicsDevicePolicy.kext/Contents/Info.plist
 
-搜索Mac-B809C3757DA9BB8D, 它下面一行有Config2, 改成none, 保存.
+	搜索Mac-B809C3757DA9BB8D, 它下面一行有Config2, 改成none, 保存.
 
-3.重建缓存：`sudo touch /System/Library/Extensions && sudo kextcache -u /` ,然后重启.
+3. 重建缓存：`sudo touch /System/Library/Extensions && sudo kextcache -u /` ,然后重启.
 
-上面的方法在遇到重装系统或者升级的时候需要再次修改,下面介绍另外一种, 原理: `一劳永逸！更新不再替换Kext(Kexts to patch)教程`
+> 上面的方法在遇到重装系统或者升级的时候需要再次修改,下面介绍另外一种, 原理参考syscl的: [一劳永逸！更新不再替换Kext(Kexts to patch)教程](http://bbs.pcbeta.com/viewthread-1580832-1-1.html)
 
 Clover Configurator打开config.plist左侧选择`Kernel and Kexts patch`,在右边的`KextsToPatch`里点击加号,新添加了一行.
 
-Name填`AppleGraphicsDevicePolicy`
+- Name填`AppleGraphicsDevicePolicy`
 
-下面的数值只适用于Mac-B809C3757DA9BB8D这个ID。
+下面的数值只适用于`Mac-B809C3757DA9BB8D`这个ID。
 
-Find填
+- Find填
+`3e4d61632d423830394333373537444139424238443c2f6b65793e0a090909093c737472696e673e436f6e666967323c2f737472696e673e0a09`
 
-	3e4d61632d423830394333373537444139424238443c2f6b65793e0a090909093c737472696e673e436f6e666967323c2f737472696e673e0a09 
+- Replace填
+`3e4d61632d423830394333373537444139424238443c2f6b65793e0a090909093c737472696e673e6e6f6e653c2f737472696e673e0a09090909`
 
-Replace填
-
-	3e4d61632d423830394333373537444139424238443c2f6b65793e0a090909093c737472696e673e6e6f6e653c2f737472696e673e0a09090909
-
-Comment随便填个`Fix HDMI output`, 勾上`InfoPlistPatch`, 保存, 重启.
+- Comment随便填个`Fix HDMI output`, 勾上`InfoPlistPatch`, 保存, 重启.
 
 
 ## *. 未解决的问题
@@ -578,20 +633,18 @@ Comment随便填个`Fix HDMI output`, 勾上`InfoPlistPatch`, 保存, 重启.
 
 ## **. 顺便学习到一些命令：
 
-解除驱动器的只读模式：`mount -uw /` ，这个在安装盘的终端下有时会用到，比如装错驱动进不了系统，想删掉。
-手动安装驱动：`sudo cp -R xxx.kext /Library/Extensions`，然后重建缓存
-重建缓存：`sudo touch /Library/Extensions && sudo kextcache -u /`
+- 解除驱动器的只读模式：`mount -uw /` ，这个在安装盘的终端下有时会用到，比如装错驱动进不了系统，想删掉。
+- 手动安装驱动：`sudo cp -R xxx.kext /Library/Extensions`，然后重建缓存
+- 重建缓存：`sudo touch /Library/Extensions && sudo kextcache -u /`
 
-准备加SATA硬盘，问了Dell销售电话: 4008816875，结果中秋后第一个工作日和第三个工作日（上班时间内）各打一次都提示非工作时间，其实我就是想问问贵销售部还招不招人，没想买东西来着……
+ 准备加SATA硬盘，问了Dell销售电话: 4008816875，结果中秋后第一个工作日和第三个工作日（上班时间内）各打一次都提示非工作时间，其实我就是想问问贵销售部还招不招人，没想买东西来着……
 
-安装过程参考了老外教程：`http://www.tonymacx86.com/threads/guide-dell-xps-15-9550-skylake-gtx960m-ssd-via-clover-uefi.192598/`
+> 安装过程参考了老外教程：[tonymacx86](http://www.tonymacx86.com/threads/guide-dell-xps-15-9550-skylake-gtx960m-ssd-via-clover-uefi.192598/)
 
-我的东西多数是抄自这位大神的github，驱动什么的我从他这里找的：
-`https://github.com/corenel/XPS9550-OSX`
+> 我的东西多数是抄自这位大神的github，驱动什么的我从他这里找的：[corenel-xps9550-osx](https://github.com/corenel/XPS9550-OSX)
 
-也特别佩服这位大神不断地完善他的机子，可惜我买的不是M3800（9530）：
-`https://github.com/syscl/M3800`
- （我用了他的ApplePS2SmartTouchPad 4.5，解决了亮度和音量的格数问题）
+> 也特别佩服syscl大神不断地完善他的机子，可惜我买的不是M3800（9530）：[syscl-M3800](https://github.com/syscl/M3800)   
+（我用了他的ApplePS2SmartTouchPad 4.5，解决了亮度和音量的格数问题）
 
 
 
