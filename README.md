@@ -1,17 +1,20 @@
 # XPS15-9550-OSX
 
-> doc文档不更新了，直接看本文吧
+> docx文档不更新了，直接看本文吧  
+> 本文讨论的是这个配置：``XPS 15 9550 i7-6700HQ 8G  256G(东芝 NVME) 1920x1080``   
+> 如果你的是4K屏，还需要做特殊处理，请参考其他教程。
 
-&ensp;&ensp;之前弄过Acer 4743G的黑苹果，除了睡眠，其他都正常，日常用起来感觉也没什么问题，所以对XPS也是信心满满的，当然也是因为在PCBeta看了不少成功案例，还有国外一位牛人把驱动，DSDT，Clover配置全部分享在github，所以就打算买一台XPS 15 9550来做主力机型，用于开发。
+---
 
-&ensp;&ensp;从JS处三言两语就定下了官翻，现货，当晚付款发货，翌日中午收到，打开一看，还是很满意的，除了没有硬盘指示灯，开盖比较困难，没有送国标电源线，屏幕下方有一处漏光（日常使用倒是不觉），还是挺满意的。
+&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;之前弄过Acer 4743G的黑苹果，除了睡眠，其他都正常，日常用起来感觉也没什么问题，所以对XPS也是信心满满的，当然也是因为在PCBeta看了不少成功案例，还有国外一位牛人把驱动，DSDT，Clover配置全部分享在github，所以就打算买一台XPS 15 9550来做主力机型，用于开发。
 
-&ensp;&ensp;然后我边安装边写教程，过程中也遇到过不少问题，强制关机什么的都是家常便饭了，写完教程修修补补之后，我又重新格盘，自己对着教程，安装了几次，测试没有明显问题之后，才发的本文。
-等我把弯路都走过，大家就不用再走了，争取对着本文一步步操作，一次成功！还有些潜在的BUG我发现不了，希望大家一起完善。
+&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;从JS处三言两语就定下了官翻，现货，当晚付款发货，翌日中午收到，打开一看，还是很满意的，除了没有硬盘指示灯，开盖比较困难，没有送国标电源线，屏幕下方有一处漏光（日常使用倒是不觉），还是挺满意的。**稍微难受的就是CPU睿频啸叫声，晚上安静点就觉得明显了，不过这算是通病，没办法。**
 
-配置大家上网一查就知道了：``XPS 15 9550  i7-6700HQ  8G  256G(NVME 东芝) 1080P ``  
+&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;然后我边安装边写教程，过程中也遇到过不少问题，强制关机什么的都是家常便饭了，写完教程修修补补之后，我又重新格盘，自己对着教程，安装了几次，测试没有明显问题之后，才发的本文。
+等我把弯路都走过，大家就不用再走了，争取对着本文一步步操作，一次成功！还有些潜在的BUG我解决不了，希望大家一起完善。
+ 
 
-完成后的状态： 
+## 完成后的状态： 
 >
 - 显卡正常
 - 声卡外放完美，耳机低频丢失，稍微调整一下左右声道可以暂缓
@@ -24,9 +27,11 @@
 - HDMI输出未测试
 - 直接升级系统未测试
 
+---
+
 ## 一、硬件准备
 
-1. 更新你的BIOS到01.02.10（虽然9月6日有更新的BIOS，但我还是用这个7月5日的版本）。
+1. 更新你的BIOS到`01.02.10`（虽然9月6日有更新鲜的BIOS，但我暂时还是用这个7月5日的版本）  
 	更新包下载页面：[Dell官方下载](http://www.dell.com/support/home/cn/zh/cndhs1/Drivers/DriversDetails?driverId=96T2K)
 	
 	下载完成后是``XPS_9550_1.2.10.exe``，直接在XPS15上双击运行，确保你的电量在50%以上或接上了电源，两次点击确定，系统就自动重启并进入BIOS升级界面了。	 
@@ -535,7 +540,7 @@ end;
 
 这一步的目的是构建一个假的内建网卡, 让你可以在AppStore下载应用. 
 
-6.编译DSDT/SSDT
+6.编译DSDT/SSDT  
 现在origin里新建一个文件夹叫Ver1，把所有dsl文件复制一份进去留作备份。  
 
 然后我们打开DSDT.dsl，点击屏幕左上角的File - Save as...，在弹出的对话框中，File Format选择`ACPI Machine Language Binary`，在文件名后面加上.aml，点击Save保存。  
@@ -556,17 +561,17 @@ end;
 
 ## 六、更多Kext驱动
 1. 现在把EFI\Clover\kexts\Other里面的GenericUSBXHCI.kext删除。  
-	如果你前面做了五.5.B步骤的话，把VoodooPS2Controller.kext，ApplePS2Controller.kext，AppleACPIPS2Nub.kext也删除。
+	如果你前面做了*五.5.B*步骤的话，把VoodooPS2Controller.kext，ApplePS2Controller.kext，AppleACPIPS2Nub.kext也删除。
 
 2. 把我提供的MoreKexts.zip解压，里面的所有kext驱动放进去EFI\Clover\kexts\Other里。
 
 3. 把我提供的Kext_Utility.app.v2.6.6.zip解压，得到Kext Utility.app，双击运行输入密码，出现一个白窗口，等待窗口下面的小菊花转到消失。
 
-	把我提供的SLE.zip解压得到SLE文件夹，选中里面所有文件，（如果你不需要ApplePS2SmartTouchPad，就不要选它），拖进Kext Utility的白窗口，等待小菊花消失。
+	把我提供的SLE.zip解压得到SLE文件夹，选中里面所有文件，（如果你不需要ApplePS2SmartTouchPad，就不要选它），拖进`Kext Utility`的白窗口，等待小菊花消失。
 
 4. 删除网络配置(为了配合NullEthernet.kext)
 
-	系统偏好设置 – 网络, 把左边所有的有线无线网络接口都删除(点下面的减号), 然后去删除/Library/Preferences/SystemConfiguration/NetworkInterfaces.plist, 如何打开呢? 在终端输入`open /Library/Preferences/SystemConfiguration`, 就出现了, 然后找到`NetworkInterfaces.plist` 删除掉.
+	打开`系统偏好设置 – 网络`, 把左边所有的有线无线网络接口都删除(点下面的减号), 然后去删除/Library/Preferences/SystemConfiguration/NetworkInterfaces.plist, 如何打开呢? 在终端输入`open /Library/Preferences/SystemConfiguration`, 就出现了, 然后找到`NetworkInterfaces.plist` 删除掉.
 
 	重启后发现声音有了，电量显示了，显卡驱动起来了，如果触摸板不正常，再重启多两次就正常了。
 
@@ -581,10 +586,10 @@ end;
 ## 七. 附加补丁
 
 Corenel的github上提供了他自己的配置，其中有个`ssdt-uiac.aml`，这个和`USBInjectAll.kext` （在我的MoreKexts里）配合使用的，用来修复USB3的一些问题，你放ACPI\patched里面好了。  
-想研究的也可以看看：https://github.com/RehabMan/OS-X-USB-Inject-All 
+想研究的也可以看看：[驱动地址](https://github.com/RehabMan/OS-X-USB-Inject-All)
 
 还有个`SSDT-ALC298.aml`，配合`CodecCommander.kext`使用的，修复睡眠/唤醒后，声音的状态，也是放patched里面，但**在我这里两者都不用也可以唤醒有声，所以推荐你真正发现唤醒无声才用**。  
-想研究的也可以看看：https://github.com/RehabMan/EAPD-Codec-Commander 这里的是dsl，自己编译成aml使用。
+想研究的也可以看看：[驱动地址](https://github.com/RehabMan/EAPD-Codec-Commander) 这里的是dsl，自己编译成aml使用。
 
 ## 八. CPU变频
 
@@ -596,18 +601,18 @@ Corenel的github上提供了他自己的配置，其中有个`ssdt-uiac.aml`，�
 就是生成变频SSDT成功。
 
 接下来还有提示：
-`Do you want to copy /Users/XXX/Library/ssdtPRGen/ssdt.aml to /Extra/ssdt.aml? (y/n)?  输入n回车`
+`Do you want to copy /Users/XXX/Library/ssdtPRGen/ssdt.aml to /Extra/ssdt.aml? (y/n)?  输入n回车`    
 `Do you want to open ssdt.dsl (y/n)?  输入n回车`
 
 然后输入：`open ~/Library/ssdtPRGen/` ，弹出窗口，找到ssdt.aml 和 ssdt.dsl，复制到origin，把ssdt.aml复制到EFI分区的patched里面，重启。
 
 再次强调，因为**我上面采用的config.plist已经在SSDT-OEM列表包含了ssdt.aml**，所以这里只需要复制过去patched就好，没有额外工作。
 
-重启发现，系统启动速度更快了！节能器出现了Power Nap的勾选项.
+重启发现，系统启动速度更快了！系统设置里的节能器出现了`Power Nap`的勾选项.
 
-## 九、外置输出
+## 九、HDMI输出
 
-根据Corenel的github上面说的，你用了iMac7,1这个SMBIOS的话（上面我的config.plist就是），你要这样操作：
+根据Corenel的github上面说的，你用了`iMac7,1`这个SMBIOS的话（上面我的config.plist就是），你要这样操作：
 
 1. 打开你的config.plist找到SMBIOS里面的`Board-ID`,我这里是`Mac-B809C3757DA9BB8D`.
 
@@ -634,9 +639,9 @@ Clover Configurator打开config.plist左侧选择`Kernel and Kexts patch`,在右
 - Comment随便填个`Fix HDMI output`, 勾上`InfoPlistPatch`, 保存, 重启.
 
 
-## *. 未解决的问题
+## * 未解决的问题
 
-1. 亮度调节不正常，只有10档，用了ApplePS2SmartTouchPad驱动后，级别也不正常，一气之下打了个Haswell/Broadwell的Brightness fix补丁，似乎稍好，变成17档了（最低那3档不正常，闪屏）。
+1. 亮度调节不正常，只有10档，用了ApplePS2SmartTouchPad驱动后，级别也不正常，一气之下打了个**Haswell/Broadwell的Brightness fix**补丁，似乎稍好，变成17档了（最低那3档不正常，轻微闪屏）。
 
 2. 进入睡眠的时间稍长（有时可能20-30秒），当然，睡得挺好，我睡前让它睡了，起床后再开盖，也能醒过来。
 
@@ -644,7 +649,7 @@ Clover Configurator打开config.plist左侧选择`Kernel and Kexts patch`,在右
 
 
 
-## **. 顺便学习到一些命令：
+## * 顺便学习到一些命令：
 
 - 解除驱动器的只读模式：`mount -uw /` ，这个在安装盘的终端下有时会用到，比如装错驱动进不了系统，想删掉。
 - 手动安装驱动：`sudo cp -R xxx.kext /Library/Extensions`，然后重建缓存
