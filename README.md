@@ -6,11 +6,11 @@
 
 ---
 
-&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;之前弄过Acer 4743G的黑苹果，除了睡眠，其他都正常，日常用起来感觉也没什么问题，所以对XPS也是信心满满的，当然也是因为在PCBeta看了不少成功案例，还有国外一位牛人把驱动，DSDT，Clover配置全部分享在github，所以就打算买一台XPS 15 9550来做主力机型，用于开发。
+&ensp;&ensp;&ensp;&ensp;之前弄过Acer 4743G的黑苹果，除了睡眠，其他都正常，日常用起来感觉也没什么问题，所以对XPS也是信心满满的，当然也是因为在PCBeta看了不少成功案例，还有国外一位牛人把驱动，DSDT，Clover配置全部分享在github，所以就打算买一台XPS 15 9550来做主力机型，用于开发。
 
-&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;从JS处三言两语就定下了官翻，现货，当晚付款发货，翌日中午收到，打开一看，还是很满意的，除了没有硬盘指示灯，开盖比较困难，没有送国标电源线，屏幕下方有一处漏光（日常使用倒是不觉），还是挺满意的。**稍微难受的就是CPU睿频啸叫声，晚上安静点就觉得明显了，不过这算是通病，没办法。**
+&ensp;&ensp;&ensp;&ensp;从JS处三言两语就定下了官翻，现货，当晚付款发货，翌日中午收到，打开一看，还是很满意的，除了没有硬盘指示灯，开盖比较困难，没有送国标电源线，屏幕下方有一处漏光（日常使用倒是不觉），还是挺满意的。**稍微难受的就是CPU睿频啸叫声，晚上安静点就觉得明显了，不过这算是通病，没办法。**
 
-&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;然后我边安装边写教程，过程中也遇到过不少问题，强制关机什么的都是家常便饭了，写完教程修修补补之后，我又重新格盘，自己对着教程，安装了几次，测试没有明显问题之后，才发的本文。
+&ensp;&ensp;&ensp;&ensp;然后我边安装边写教程，过程中也遇到过不少问题，强制关机什么的都是家常便饭了，写完教程修修补补之后，我又重新格盘，自己对着教程，安装了几次，测试没有明显问题之后，才发的本文。
 等我把弯路都走过，大家就不用再走了，争取对着本文一步步操作，一次成功！还有些潜在的BUG我解决不了，希望大家一起完善。
  
 
@@ -600,7 +600,7 @@ Corenel的github上提供了他自己的配置，其中有个`ssdt-uiac.aml`，�
 如果提示：`Compilation complete. 0 Errors, 0 Warnings, 0 Remarks, 0 Optimizations`  
 就是生成变频SSDT成功。
 
-接下来还有提示：
+接下来还有提示：  
 `Do you want to copy /Users/XXX/Library/ssdtPRGen/ssdt.aml to /Extra/ssdt.aml? (y/n)?  输入n回车`    
 `Do you want to open ssdt.dsl (y/n)?  输入n回车`
 
@@ -639,7 +639,7 @@ Clover Configurator打开config.plist左侧选择`Kernel and Kexts patch`,在右
 - Comment随便填个`Fix HDMI output`, 勾上`InfoPlistPatch`, 保存, 重启.
 
 
-## * 未解决的问题
+## 未解决的问题
 
 1. 亮度调节不正常，只有10档，用了ApplePS2SmartTouchPad驱动后，级别也不正常，一气之下打了个**Haswell/Broadwell的Brightness fix**补丁，似乎稍好，变成17档了（最低那3档不正常，轻微闪屏）。
 
@@ -649,17 +649,18 @@ Clover Configurator打开config.plist左侧选择`Kernel and Kexts patch`,在右
 
 
 
-## * 顺便学习到一些命令：
+## 顺便学习到一些命令：
 
 - 解除驱动器的只读模式：`mount -uw /` ，这个在安装盘的终端下有时会用到，比如装错驱动进不了系统，想删掉。
 - 手动安装驱动：`sudo cp -R xxx.kext /Library/Extensions`，然后重建缓存
 - 重建缓存：`sudo touch /Library/Extensions && sudo kextcache -u /`
 
+## 引用
  准备加SATA硬盘，问了Dell销售电话: 4008816875，结果中秋后第一个工作日和第三个工作日（上班时间内）各打一次都提示非工作时间，其实我就是想问问贵销售部还招不招人，没想买东西来着……
 
 > 安装过程参考了老外教程：[tonymacx86](http://www.tonymacx86.com/threads/guide-dell-xps-15-9550-skylake-gtx960m-ssd-via-clover-uefi.192598/)
 
-> 我的东西多数是抄自这位大神的github，驱动什么的我从他这里找的：[corenel-xps9550-osx](https://github.com/corenel/XPS9550-OSX)
+> 我上面的驱动多数是抄自corenel大神的github，驱动什么的我从他这里找的：[corenel-xps9550-osx](https://github.com/corenel/XPS9550-OSX)
 
 > 也特别佩服syscl大神不断地完善他的机子，可惜我买的不是M3800（9530）：[syscl-M3800](https://github.com/syscl/M3800)   
 （我用了他的ApplePS2SmartTouchPad 4.5，解决了亮度和音量的格数问题）
