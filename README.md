@@ -2,7 +2,7 @@
 
 > docx文档不更新了，直接看本文吧  
 > 本文讨论的是这个配置：``XPS 15 9550 i7-6700HQ 8G  256G(东芝 NVME) 1920x1080``   
-> 如果你的是4K屏，还需要做特殊处理，请参考其他教程。
+> 如果你的是4K屏，还需要做特殊处理，请参考老外教程的4K部分：[tonymacx86](http://www.tonymacx86.com/threads/guide-dell-xps-15-9550-skylake-gtx960m-ssd-via-clover-uefi.192598/)。
 
 ---
 
@@ -36,11 +36,11 @@
 	
 	下载完成后是``XPS_9550_1.2.10.exe``，直接在XPS15上双击运行，确保你的电量在50%以上或接上了电源，两次点击确定，系统就自动重启并进入BIOS升级界面了。	 
 	
-	![](http://odzz92j0w.bkt.clouddn.com/image/xps9550-osx/update_bios.png)
+	![](./snapshot/update_bios.png)
 	
 	进入了升级界面之后别手贱了，耐心等完成，完成的时候有一行绿字，然后自动重启。 
 	
-	![](http://odzz92j0w.bkt.clouddn.com/image/xps9550-osx/IMG_6946.JPG)
+	![](./snapshot/IMG_6946.JPG)
 	
 	重启完成进入Windows后你再重启一次，重启看见DELL的时候按一下F2，进入BIOS设置画面，在就会显示`General-System Information`里会显示BIOS版本为`01.02.10`，后面我们会再来改变一些设置。
 
@@ -53,7 +53,7 @@
 
 	安装TransMac（在官网或上面的共享下载就行了，试用期15天，还要什么破解版，用那么3、5次就不用了），安装到XPS的出厂自带Windows系统，然后把上面的DMG镜像写入U盘，右击TransMac，以管理员身份运行，然后看图操作，出现Restore Complete即为写入完成。
 	
-	![](http://odzz92j0w.bkt.clouddn.com/image/xps9550-osx/write_dmg.png)
+	![](./snapshot/write_dmg.png)
 	
 
 3. 打开文件浏览器，发现只有一个名字为EFI的分区（俗称盘），这个分区其实就是TransMac写入你U盘的那个镜像文件创建的，里面有EFI文件夹，有boot文件。
@@ -120,37 +120,37 @@
 
 	出现一个对话框:
 	
-	![](http://odzz92j0w.bkt.clouddn.com/image/xps9550-osx/IMG_6950.JPG)
+	![](./snapshot/IMG_6950.JPG)
  
 	第一个框`Boot Option Name`随便填，这里我写`Clover`，最后一个框`File Name`点击右边的按钮，出现另外一个对话框。	  
 	
 	选择EFI文件夹
 	
-	![](http://odzz92j0w.bkt.clouddn.com/image/xps9550-osx/IMG_6951.JPG)
+	![](./snapshot/IMG_6951.JPG)
 	
 	选择Clover（如果没看见Clover，点击上面的`File System`旁边的下拉列表，换一个FS1或FS2或FS0，总之要找到EFI里有Clover的）
 
-	![](http://odzz92j0w.bkt.clouddn.com/image/xps9550-osx/IMG_6952.JPG)
+	![](./snapshot/IMG_6952.JPG)
 
 	右边出现`CLOVERX64.EFI`，点击它，点击OK，再点击OK。 
 	
-	![](http://odzz92j0w.bkt.clouddn.com/image/xps9550-osx/IMG_6954.JPG)
+	![](./snapshot/IMG_6954.JPG)
 	 
 	现在发现右上角的列表多了一个Clover，把它调到最顶（顺序可以用右边的按钮调节）。  
 	
-	![](http://odzz92j0w.bkt.clouddn.com/image/xps9550-osx/IMG_6955.JPG)
+	![](./snapshot/IMG_6955.JPG)
 	 
 	改完后Apply-Save，OK, Exit，电脑自动重启  
 
 6. 出现横排一行图标的画面，就是Clover引导的画面了
  
-![](http://odzz92j0w.bkt.clouddn.com/image/xps9550-osx/IMG_6956.JPG)
+![](./snapshot/IMG_6956.JPG)
  
 按方向键右找找有没有Boot OS X Install from Install OS X EI Caption的（真TM长），对准它按空格键，选择Boot Mac OS X in verbose mode再按空格。
 
 这时候会进入黑底白字很多英文.
 
-![](http://odzz92j0w.bkt.clouddn.com/image/xps9550-osx/IMG_6957.JPG)
+![](./snapshot/IMG_6957.JPG)
 
 过了2分钟，就进入了白色苹果界面，下面一个进度条。这个白色苹果画面可能进度条不走，别紧张，耐心等2分钟就好了。
  
@@ -166,18 +166,18 @@
 1. 选择语言为简体中文，然后点击磁盘工具，出现如下图，如果你加载了NVME驱动（上面Other文件夹里的）。
 我这里选择TOSHIBA的盘，因为这是我的NVME主硬盘（感谢JS发的官翻XPS不是用PM951），抹掉，名字随便改，抹掉。
 	
-	![](http://odzz92j0w.bkt.clouddn.com/image/xps9550-osx/IMG_6958.JPG)
+	![](./snapshot/IMG_6958.JPG)
 	
-	![](http://odzz92j0w.bkt.clouddn.com/image/xps9550-osx/IMG_6959.JPG)
+	![](./snapshot/IMG_6959.JPG)
 
    
 	然后点击分区，按你自己的需要，不需要Win系统的话跳过此步。我这里把OSX分区分170G（主力系统，搞开发），剩下的85G留给Win10，点击应用就可以了。
 	
-	![](http://odzz92j0w.bkt.clouddn.com/image/xps9550-osx/IMG_6960.JPG)
+	![](./snapshot/IMG_6960.JPG)
  
 	然后关闭磁盘工具，选择安装OS X，点击继续，同意，同意，卖身成功。
 	
-	![](http://odzz92j0w.bkt.clouddn.com/image/xps9550-osx/IMG_6962.JPG)
+	![](./snapshot/IMG_6962.JPG)
 
 2. 这时候会让你选择安装到哪个分区，选择刚才我们分出来的OSX分区，点击安。
 
@@ -191,7 +191,7 @@
 
 4. 这时候Clover的引导画面已经多了一个选项：`Boot Mac OS X from OSX`，选择这个按空格，再选verbose mode，继续大段英文，就进入OSX系统设置阶段。
 
-	![](http://odzz92j0w.bkt.clouddn.com/image/xps9550-osx/IMG_6966.JPG)
+	![](./snapshot/IMG_6966.JPG)
 
 5. 这时候可以按照实际情况设置时区、语言、无线连接、用户登陆什么的，然后就进入系统了。
 
@@ -202,7 +202,7 @@
 	出现卖身条约，Agree吧，出现系统用户设置画面，起个名字，设个密码，Continue。  
 	出现诊断/使用 报告，不勾，Continue，进入桌面。
 	
-	![](http://odzz92j0w.bkt.clouddn.com/image/xps9550-osx/IMG_6967.JPG)
+	![](./snapshot/IMG_6967.JPG)
 
 
 ## 四、硬盘引导
@@ -216,7 +216,7 @@
 	
 	- 再输入`diskutil list` 回车，出现：
 	 
-		![](http://odzz92j0w.bkt.clouddn.com/image/xps9550-osx/IMG_6969.JPG)
+		![](./snapshot/IMG_6969.JPG)
 	
 	- 找到`Install OS X El Caption` 这行对上的那行是EFI，看看这行最左边对应的数字是1，顺着往上看看#号顶上是什么，我这里是`/dev/disk2`，那么接下来的命令就是：
 	`sudo mount -t msdos /dev/disk2s1 /Volumes/myefi` 回车，提示输入密码，输入你上面第5小步的时候设置的系统用户密码，什么也不提示表示成功执行。
@@ -275,7 +275,7 @@
 	
 	每做完一个小步骤，你都应该点击一下MaciASL上面的Compile按钮，确定窗口下方提示是0 Errors，至于warnings就不用管。如果有Error，你应该检查你这一小步是否做错了。
 	
-	![](http://odzz92j0w.bkt.clouddn.com/image/xps9550-osx/IMG_6970.JPG)
+	![](./snapshot/IMG_6970.JPG)
  
 
 ### A. 系统模拟
@@ -545,11 +545,13 @@ end;
 
 然后我们打开DSDT.dsl，点击屏幕左上角的File - Save as...，在弹出的对话框中，File Format选择`ACPI Machine Language Binary`，在文件名后面加上.aml，点击Save保存。  
 
-![](http://odzz92j0w.bkt.clouddn.com/image/xps9550-osx/IMG_6972.JPG)
+![](./snapshot/IMG_6972.JPG)
 
 对origin里其他.dsl文件进行上述的保存操作，生成所有.aml文件。  
 
 然后把这些aml文件全部复制到系统EFI分区的`Clover\ACPI\patched`里面（还记得怎样挂载EFI分区吗？用Clover Configurator.app，看看本节的第1小点）
+
+>然后，这些aml文件都是你的宝贝，要好好保存起来，以后有什么问题需要重新安装系统，这些aml不用重新制作了，只要覆盖到系统EFI分区的`Clover\ACPI\patched`里面就可以了，因为你的BIOS没有升级，你的硬件没有变化的情况下，DSDT/SSDT都是一样的。
 
 7.让DSDT/SSDT生效
 
@@ -567,7 +569,7 @@ end;
 
 3. 把我提供的Kext_Utility.app.v2.6.6.zip解压，得到Kext Utility.app，双击运行输入密码，出现一个白窗口，等待窗口下面的小菊花转到消失。
 
-	把我提供的SLE.zip解压得到SLE文件夹，选中里面所有文件，（如果你不需要ApplePS2SmartTouchPad，就不要选它），拖进`Kext Utility`的白窗口，等待小菊花消失。
+	把我提供的SLE.zip解压得到SLE文件夹，选中里面所有文件，（如果你不需要ApplePS2SmartTouchPad，就不要选它，CodecCommander也可以不选，等发现睡眠唤醒没声音才安装），拖进`Kext Utility`的白窗口，等待小菊花消失。
 
 4. 删除网络配置(为了配合NullEthernet.kext)
 
