@@ -23,7 +23,7 @@
 - ThunderBolt似乎无解，AirDrop正常，蓝牙正常
 - 盒盖睡眠，翻盖唤醒，手动睡眠 全部正常
 - 电量正常
-- 偶尔开机时会卡在进度条画面（十多次发现一次）
+- 偶尔开机时会卡在进度条画面（二十多次发现一次）
 - HDMI输出未测试
 - 直接升级系统未测试
 
@@ -639,6 +639,19 @@ Clover Configurator打开config.plist左侧选择`Kernel and Kexts patch`,在右
 `3e4d61632d423830394333373537444139424238443c2f6b65793e0a090909093c737472696e673e6e6f6e653c2f737472696e673e0a09090909`
 
 - Comment随便填个`Fix HDMI output`, 勾上`InfoPlistPatch`, 保存, 重启.
+
+
+## 一些小问题修复
+
+1. 磁盘没有正确推出
+
+	我留意到，在OSX连接着USB移动磁盘的时候进入睡眠或者关机，系统会在瞬间使磁盘断电，导致“咔”的一声响（硬盘的磁头没有正确归位，容易产生坏道），于是搜索了一下，看见了syscl大神的帖子[解决唤醒后磁盘没有正确推出问题](http://bbs.pcbeta.com/viewthread-1680369-1-1.html)，方法如下：
+
+	终端执行：`git clone https://github.com/syscl/Fix-usb-sleep`  
+	上面的提示完成之后输入：`chmod +x ~/Fix-usb-sleep/fixUSB.sh`  
+	然后：`cd ~/Fix-usb-sleep`  
+	最后：`./fixusb.sh`，提示输入你的密码，提示`DONE! Sleep to see change.`表示成功了, 你可以自己测试一下效果.  
+	我测试的效果是，再也没有异常的响声了，也不会提示未正确推出了。
 
 
 ## 未解决的问题
