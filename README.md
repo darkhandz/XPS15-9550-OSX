@@ -231,7 +231,8 @@
 
 4. 这时候Finder左边有两个EFI分区了，注意区分一下哪个是你U盘的（右边有特殊符号的那个）。
 	先把系统的EFI分区里面的Clover\kexts文件夹删除，然后把你U盘的EFI分区Clover\kexts文件夹整个复制到系统的EFI分区那里。  
-	然后把你U盘里的`Clover\Drivers64UEFI\HFSPlus.efi`复制到系统的Clover\Drivers64UEFI里。
+	然后把你U盘里的`Clover\Drivers64UEFI\HFSPlus.efi`复制到系统的Clover\Drivers64UEFI里。  
+	**`感谢ye123963同学的提醒，我漏写了一步，把你U盘里的`Clover\config.plist`复制到系统的Clover，覆盖文件。`**
 
 5. 现在修改一下系统语言，点击屏幕左上角的苹果Logo，第二项，第一行第五个，左下角有个+号，选择简体中文，然后选择PinYin输入法，确定，提示要Restart，点击Restart Now，就重启了，电脑黑屏准备重启的时候把引导U盘拔掉，让系统硬盘的Clover引导。
 
@@ -506,6 +507,8 @@ Skylake的CPU默认不会加载AppleLPC.kext，需要打补丁。给DSDT打补�
 给DSDT打上 `[sys] OS Check Fix (Windows 8)` 补丁。
 
 ### J. 假以太网卡内建
+这一步的目的是构建一个假的内建网卡, 让你可以在AppStore下载应用. 
+
 为了配合后面安装的NullEthernet.kext(在SLE里), 还需要打个补丁, 把下面的内容粘贴到Patch窗口的右上方, 按Apply, Close, Compile没有Errors，保存，关闭MaciASL.(感谢坛友龙猫喵的提醒，下面修正了代码)
 想研究的同学去[Rehabman大神的github](https://github.com/RehabMan/OS-X-Null-Ethernet)看看。
 
@@ -538,9 +541,13 @@ Device (RMNE)\n
 end;
 ```
 
-这一步的目的是构建一个假的内建网卡, 让你可以在AppStore下载应用. 
+### K. 声卡Layout-id
+这步可选，如果你的config.plist配置的ACPI - Fixes里勾选了FixHDA，并且Devices - Audio - Inject 框内填了13，就跳过本步骤。  
+如果没有上述操作，在DSDT里搜索HDAS，全部替换为HDEF。  
+然后打补丁*`[audio] Audio Layout 12`*，注意这里在Apply之前，把右上方补丁内容框里`"layout-id", Buffer() { 12,`这行的12改成13，然后再Apply。
 
-6.编译DSDT/SSDT  
+
+**7.编译DSDT/SSDT**  
 现在origin里新建一个文件夹叫Ver1，把所有dsl文件复制一份进去留作备份。  
 
 然后我们打开DSDT.dsl，点击屏幕左上角的File - Save as...，在弹出的对话框中，File Format选择`ACPI Machine Language Binary`，在文件名后面加上.aml，点击Save保存。  
@@ -553,7 +560,7 @@ end;
 
 >然后，这些aml文件都是你的宝贝，要好好保存起来，以后有什么问题需要重新安装系统，这些aml不用重新制作了，只要覆盖到系统EFI分区的`Clover\ACPI\patched`里面就可以了，因为你的BIOS没有升级，你的硬件没有变化的情况下，DSDT/SSDT都是一样的。
 
-7.让DSDT/SSDT生效
+**8.让DSDT/SSDT生效**
 
 打开`Clover\config.plist`，现在系统应该默认是用Clover Configurator.app打开它的。  
 点击左边Acpi项，右下边找到SSDT的框里面的Drop OEM勾上。  
@@ -587,11 +594,19 @@ end;
 
 ## 七. 附加补丁
 
-Corenel的github上提供了他自己的配置，其中有个`ssdt-uiac.aml`，这个和`USBInjectAll.kext` （在我的MoreKexts里）配合使用的，用来修复USB3的一些问题，你放ACPI\patched里面好了。  
-想研究的也可以看看：[驱动地址](https://github.com/RehabMan/OS-X-USB-Inject-All)
+- Corenel的github上提供了他自己的配置，其中有个`ssdt-uiac.aml`，这个和`USBInjectAll.kext` （在我的MoreKexts里）配合使用的，用来启用所有USB端口，修复一些问题(比如用不了内置摄像头，内置蓝牙)，你放ACPI\patched里面好了。  
+	- 想研究的也可以看看：[驱动地址](https://github.com/RehabMan/OS-X-USB-Inject-All)
 
-还有个`SSDT-ALC298.aml`，配合`CodecCommander.kext`使用的，修复睡眠/唤醒后，声音的状态，也是放patched里面，但**在我这里两者都不用也可以唤醒有声，所以推荐你真正发现唤醒无声才用**。  
-想研究的也可以看看：[驱动地址](https://github.com/RehabMan/EAPD-Codec-Commander) 这里的是dsl，自己编译成aml使用。
+- 还有个`SSDT-ALC298.aml`，配合`CodecCommander.kext`使用的，修复睡眠/唤醒后，声音的状态，也是放patched里面，但**在我这里两者都不用也可以唤醒有声，所以推荐你真正发现唤醒无声才用**。  
+	- 想研究的也可以看看：[驱动地址](https://github.com/RehabMan/EAPD-Codec-Commander) 这里的是dsl，自己编译成aml使用。
+
+- 通用补丁，在Rehabman大神的教程[Patching LAPTOP DSDT/SSDTs](https://www.tonymacx86.com/threads/guide-patching-laptop-dsdt-ssdts.152573/)里，提到有些通用补丁可以打（我试了好像打不打无关痛痒，随你喜欢）
+	- "Fix _WAK Arg0 v2"
+	- "HPET Fix"
+	- "SMBUS Fix"
+	- "IRQ Fix"
+	- "RTC Fix"
+	- "Fix Mutex with non-zero SyncLevel"
 
 ## 八. CPU变频
 
@@ -647,12 +662,14 @@ Clover Configurator打开config.plist左侧选择`Kernel and Kexts patch`,在右
 
 	我留意到，在OSX连接着USB移动磁盘的时候进入睡眠或者关机，系统会在瞬间使磁盘断电，导致“咔”的一声响（硬盘的磁头没有正确归位，容易产生坏道），于是搜索了一下，看见了syscl大神的帖子[解决唤醒后磁盘没有正确推出问题](http://bbs.pcbeta.com/viewthread-1680369-1-1.html)，方法如下：
 
-	终端执行：`git clone https://github.com/syscl/Fix-usb-sleep`  
+	终端执行：`git clone https://github.com/syscl/Fix-usb-sleep`，提示需要安装软件，点击安装，等5分钟左右安装完，然后再执行一次本命令。  
 	上面的提示完成之后输入：`chmod +x ~/Fix-usb-sleep/fixUSB.sh`  
 	然后：`cd ~/Fix-usb-sleep`  
 	最后：`./fixusb.sh`，提示输入你的密码，提示`DONE! Sleep to see change.`表示成功了, 你可以自己测试一下效果.  
 	我测试的效果是，再也没有异常的响声了，也不会提示未正确推出了。
 
+2. 休眠醒来变重启  
+这个我是通过设置成0模式休眠来解决的：`sudo pmset -a hibernatemode 0`
 
 ## 未解决的问题
 
