@@ -1,8 +1,6 @@
 # XPS15-9550-OSX
 
-> docx文档不更新了，直接看本文吧  
-> 本文讨论的是这个配置：``XPS 15 9550 i7-6700HQ 8G  256G(东芝 NVME) 1920x1080``   
-> 如果你的是4K屏，还需要做特殊处理，请参考老外教程的4K部分：[tonymacx86](http://www.tonymacx86.com/threads/guide-dell-xps-15-9550-skylake-gtx960m-ssd-via-clover-uefi.192598/)。
+> 本文讨论的是这个配置：``XPS 15 9550 i7-6700HQ 8G  256G(东芝 NVME) 1920x1080``，4K屏的也可以，注意有特殊处理小节的内容。   
 
 ---
 
@@ -20,7 +18,7 @@
 - 声卡外放完美，耳机低频丢失，稍微调整一下左右声道可以暂缓
 - 亮度调节正常，但最低三档有闪屏现象，音量调节正常
 - 无线正常，USB全部正常，摄像头、麦克风正常
-- ThunderBolt似乎无解，AirDrop正常，蓝牙正常
+- ThunderBolt/USB-C 不清楚，没设备，AirDrop正常，蓝牙正常
 - 盒盖睡眠，翻盖唤醒，手动睡眠 全部正常
 - 电量正常
 - 偶尔开机时会卡在进度条画面（二十多次发现一次）
@@ -440,7 +438,9 @@
 按Alt+S保存文件，关闭MaciASL，继续下面的步骤。
 
 
-### E. 接下来就厉害了，我们要对所有SSDT开头的文件打两个补丁（按顺序），操作方法相信你已学会，分别是：
+### E. 接下来就厉害了，我们要对所有SSDT开头的文件打两个补丁（按顺序）
+
+操作方法相信你已学会，两个补丁分别是：
 
 	[syn] Rename _DSM methods to XDSM
 	[igpu] Rename GFX0 to IGPU
@@ -449,8 +449,9 @@
 
 每个SSDT打完这两个补丁之后，Compile，如果是0 Errors就保存，下面我不再提这个Compile步骤了，冗余。
 
-到`SSDT-1`打完补丁Compile的时候我发现有Errors，看了一下，是一些参数悬着，我的修正方案是直接注释掉：
-第100行附近：
+到`SSDT-1`打完补丁Compile的时候我发现有Errors，看了一下，是一些参数悬着，我原来的修正方案是直接注释掉，**`后来得syscl大神亲自指点`**（我心情老激动了），知道了**[正确的改法](http://bbs.pcbeta.com/viewthread-1590326-1-1.html)**：
+
+第100行附近错误：
 
 	Sleep (PGCD)
 	\_SB.GGOV (0x02010016)
@@ -459,8 +460,7 @@
 改成：
 
 	Sleep (PGCD)
-	\_SB.GGOV (0x02010016)
-	//OLDV
+	\_SB.GGOV (0x02010016, OLDV)
 
 
 第121行附近：
@@ -472,8 +472,7 @@
 改成
 
 	Store (\_SB.GGOV (0x02010014), OLDV)
-	\_SB.GGOV (0x02010014)
-	//DFUE
+	\_SB.GGOV (0x02010014, DFUE)
 
 
 第126行附近：
@@ -485,8 +484,7 @@
 改成
 
 	Sleep (DFUD)
-	\_SB.GGOV (0x02010014)
-	//OLDV
+	\_SB.GGOV (0x02010014, OLDV)
 
 
 `SSDT-18`打完两个补丁后Compile也有Errors，出现在1265行附近，提示*Object does not exist(\_SB.PCI0.iGPU.XDSM)*，在文件38行附近，有一行`External (_SB_.PCI0.IGPU._DSM, MethodObj)`，直接整行复制粘贴到下一行，把`_DSM改成XDSM`，再Compile就没有错误了。
@@ -543,8 +541,36 @@ end;
 
 ### K. 声卡Layout-id
 这步可选，如果你的config.plist配置的ACPI - Fixes里勾选了FixHDA，并且Devices - Audio - Inject 框内填了13，就跳过本步骤。  
-如果没有上述操作，在DSDT里搜索HDAS，全部替换为HDEF。  
-然后打补丁*`[audio] Audio Layout 12`*，注意这里在Apply之前，把右上方补丁内容框里`"layout-id", Buffer() { 12,`这行的12改成13，然后再Apply。
+
+- 如果没有上述操作，在DSDT里搜索HDAS，全部替换为HDEF。  
+- 然后打补丁*`[audio] Audio Layout 12`*，注意这里在Apply之前，把右上方补丁内容框里`"layout-id", Buffer() { 12,`这行的12改成13，然后再Apply.  
+- 这个是我自己改过的`[audio] Audio Layout 12`补丁的内容：
+
+    ```
+    #refer to RehabMan's audio_HDEF-layout12.txt , modified for ALC298
+    
+    # Note: Change your layout ID if you need something different
+    # Note: "hda-gfx" is not needed with Haswell and should probably be removed
+    
+    #   Inject Audio info
+    into method label _DSM parent_label HDEF remove_entry;
+    into device label HDEF insert
+    begin
+    Method (_DSM, 4, NotSerialized)\n
+    {\n
+        If (LEqual (Arg2, Zero)) { Return (Buffer() { 0x03 } ) }\n
+        Return (Package()\n
+        {\n
+            "layout-id", Buffer() { 13, 0x00, 0x00, 0x00 },\n
+            "hda-gfx", Buffer() { "onboard-1" },\n
+    	    "device-type", Buffer() { "ALC298" },\n
+            "codec-id", Buffer() { 0x98, 0x02, 0xec, 0x10 },\n
+            "PinConfigurations", Buffer() { },\n
+            //"MaximumBootBeepVolume", 77,\n
+        })\n
+    }\n
+    end;
+    ```
 
 
 **7.编译DSDT/SSDT**  
@@ -566,6 +592,15 @@ end;
 点击左边Acpi项，右下边找到SSDT的框里面的Drop OEM勾上。  
 点击左边Devices项，把IntelGFX框的内容0x12345678清空。 
 然后点击屏幕左上角的File，Save，关闭Clover Configurator.app，如果还有提示框出现，点击OK。
+
+**9. 4K屏特殊处理**
+
+如果你是4K版本的9550，终端执行以下两个命令：
+
+```
+sudo perl -i.bak -pe 's|\xB8\x01\x00\x00\x00\xF6\xC1\x01\x0F\x85|\x33\xC0\x90\x90\x90\x90\x90\x90\x90\xE9|sg' /System/Library/Frameworks/IOKit.framework/Versions/Current/IOKit
+sudo codesign -f -s - /System/Library/Frameworks/IOKit.framework/Versions/Current/IOKit
+```
 
 
 ## 六、更多Kext驱动
@@ -669,7 +704,9 @@ Clover Configurator打开config.plist左侧选择`Kernel and Kexts patch`,在右
 	我测试的效果是，再也没有异常的响声了，也不会提示未正确推出了。
 
 2. 休眠醒来变重启  
+
 这个我是通过设置成0模式休眠来解决的：`sudo pmset -a hibernatemode 0`
+
 
 ## 未解决的问题
 
